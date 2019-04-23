@@ -21,16 +21,32 @@
  */
 
 var config = require('../helpers/config')
+const uuidv4 = require('uuid/v4')
 
-const ORG_GUID = 'A98CCB00-549B-458F-A627-D54C5E860519';
-const MICRO_GUID = 'D4D617E1-B4F9-49C7-91C8-52AB9DE8C18F';
-const MICRO_CORESIDENT_GUID = 'BF677Y2P-H01Y-99SZ-0YU8-FG7A04B5CVW3';
+// Generate broker UUID
+const BROKER_GUID = uuidv4().toUpperCase();
+
+// Generate ORG plan UUID
+const ORG_GUID = uuidv4().toUpperCase();
+
+// Generate MICRO_GUID plan UUID
+const MICRO_GUID = uuidv4().toUpperCase();
+
+// Generate MICRO_CORESIDENT_GUID plan UUID
+const MICRO_CORESIDENT_GUID = uuidv4().toUpperCase();
+
+// Generate dashboard client ID
+const dashboard_client = uuidv4();
+
+//const ORG_GUID = 'A98CCB00-549B-458F-A627-D54C5E860519';
+//const MICRO_GUID = 'D4D617E1-B4F9-49C7-91C8-52AB9DE8C18F';
+//const MICRO_CORESIDENT_GUID = 'BF677Y2P-H01Y-99SZ-0YU8-FG7A04B5CVW3';
 
 // service catalog - TODO: this should be configurable
 function getServiceCatalog () {
   return [
     {
-      id: '5E3F917B-9225-4BE4-802F-8F1491F714C0',
+      id: BROKER_GUID,
       name: 'apigee-edge',
       description: 'Apigee Edge API Platform',
       bindable: true,
@@ -75,7 +91,7 @@ function getServiceCatalog () {
         }
       ],
       dashboard_client: {
-        id: 'apigee-dashboard-client-id',
+        id: dashboard_client,
         secret: 'secret code phrase',
         redirect_uri: 'https://enterprise.apigee.com'
       }
