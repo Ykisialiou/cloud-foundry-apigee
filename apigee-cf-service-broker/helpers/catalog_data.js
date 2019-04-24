@@ -24,23 +24,24 @@ var config = require('../helpers/config')
 const uuidv4 = require('uuid/v4')
 
 // Generate broker UUID
-const BROKER_GUID = uuidv4().toUpperCase();
+//const BROKER_GUID = uuidv4().toUpperCase();
 
 // Generate ORG plan UUID
-const ORG_GUID = uuidv4().toUpperCase();
+//const ORG_GUID = uuidv4().toUpperCase();
 
 // Generate MICRO_GUID plan UUID
-const MICRO_GUID = uuidv4().toUpperCase();
+//const MICRO_GUID = uuidv4().toUpperCase();
 
 // Generate MICRO_CORESIDENT_GUID plan UUID
-const MICRO_CORESIDENT_GUID = uuidv4().toUpperCase();
+//const MICRO_CORESIDENT_GUID = uuidv4().toUpperCase();
 
 // Generate dashboard client ID
 const dashboard_client = uuidv4();
 
-//const ORG_GUID = 'A98CCB00-549B-458F-A627-D54C5E860519';
-//const MICRO_GUID = 'D4D617E1-B4F9-49C7-91C8-52AB9DE8C18F';
-//const MICRO_CORESIDENT_GUID = 'BF677Y2P-H01Y-99SZ-0YU8-FG7A04B5CVW3';
+const BROKER_GUID = '0c69dcc9-3dfb-431b-9f9a-c2b48fafc8f2';
+const ORG_GUID = 'A98CCB00-549B-458F-A627-D54C5E860519';
+const MICRO_GUID = 'D4D617E1-B4F9-49C7-91C8-52AB9DE8C18F';
+const MICRO_CORESIDENT_GUID = 'BF677Y2P-H01Y-99SZ-0YU8-FG7A04B5CVW3';
 
 // service catalog - TODO: this should be configurable
 function getServiceCatalog () {
