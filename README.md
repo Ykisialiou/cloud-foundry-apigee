@@ -18,6 +18,8 @@ The integrations below are enabled. See the following for suggested processes an
      - Links to instructions based on your plan choice
   1. For the direct link to the `microgateway` plan instructions, see [setup-microgateway](docs/setup-microgateway.md)
   1. For the direct link to the `microgateway-coresident` plan instructions, see [setup-microgateway-coresident](docs/setup-microgateway-coresident.md)
+  1. For the direct link to the `microgateway-c2c` plan instructions, see [setup-microgateway-c2c](docs/setup-microgateway-c2c.md)
+
 
 
 - **Open source Cloud Foundry** and **Apigee Edge (public and private cloud)**

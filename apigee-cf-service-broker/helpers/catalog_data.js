@@ -23,19 +23,29 @@
 var config = require('../helpers/config')
 const uuidv4 = require('uuid/v4')
 
-const ORG_GUID = 'A98CCB00-549B-458F-A627-D54C5E860519';
-const MICRO_GUID = 'D4D617E1-B4F9-49C7-91C8-52AB9DE8C18F';
-const MICRO_CORESIDENT_GUID = 'BF677Y2P-H01Y-99SZ-0YU8-FG7A04B5CVW3';
-const BROKER_ID = '5E3F917B-9225-4BE4-802F-8F1491F714C0'
 
-// Make dashboard ID uniq 
-const dashboard_client = uuidv4();
+//const ORG_GUID = 'A98CCB00-549B-458F-A627-D54C5E860519';
+//const MICRO_GUID = 'D4D617E1-B4F9-49C7-91C8-52AB9DE8C18F';
+//const MICRO_CORESIDENT_GUID = 'BF677Y2P-H01Y-99SZ-0YU8-FG7A04B5CVW3';
+//const MICRO_C2C_GUID = '9abe3bef-557d-4aa3-9244-c85ecea62bf1';
+
+// Generate GUID for Org  Service Plan
+const ORG_GUID = uuidv4().toUpperCase();
+
+// Generate GUID for Micro Service Plan
+const MICRO_GUID = uuidv4().toUpperCase();
+
+// Generate GUID for Micro Coresident Service Plan
+const MICRO_CORESIDENT_GUID = uuidv4().toUpperCase();
+
+// Generate GUID for C2C Service Plan
+const MICRO_C2C_GUID = uuidv4().toUpperCase();
 
 // service catalog - TODO: this should be configurable
 function getServiceCatalog () {
   return [
     {
-      id: BROKER_ID,
+      id: '5E3F917B-9225-4BE4-802F-8F1491F714C0',
       name: 'apigee-edge',
       description: 'Apigee Edge API Platform',
       bindable: true,
@@ -77,10 +87,19 @@ function getServiceCatalog () {
             displayName: 'Apigee Edge Microgateway coresident plan for running Microgateway on the same container as the target application'
           },
           free: true
-        }
+        },
+	{
+	  id: MICRO_C2C_GUID,
+	  name: 'microgateway-c2c',
+          description: 'Apigee Edge Microgateway C2C plan. C2C means Microgateway will use CloudFounry container to container networking to access backend APP. Backend app will not have a route',
+          metadata: {
+            displayName: 'Apigee Edge Microgateway C2C plan for running Microgateway and backend app in the same CloudFounry internal domain'
+          },
+          free: true
+	}
       ],
       dashboard_client: {
-        id: dashboard_client,
+        id: 'apigee-dashboard-client-id',
         secret: 'secret code phrase',
         redirect_uri: 'https://enterprise.apigee.com'
       }
@@ -92,7 +111,8 @@ module.exports = {
   guid: Object.freeze({
     org: ORG_GUID,
     micro: MICRO_GUID,
-    micro_coresident: MICRO_CORESIDENT_GUID
+    micro_coresident: MICRO_CORESIDENT_GUID,
+    micro_c2c: MICRO_C2C_GUID	  
   }),
   getServiceCatalog: getServiceCatalog
 }

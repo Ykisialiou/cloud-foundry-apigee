@@ -74,6 +74,30 @@ function checkCoresidentPlan(params, bind_resource){
   return loggerError
 }
 
+// C2C plan validation funtion
+
+function checkC2CPlan(params, bind_resource){
+  var loggerError
+  if (!params.hasOwnProperty('target_app_route')) {
+    loggerError = logger.ERR_MISSING_MICRO_C2C_PARAMETER(null,null, '"target_app_route"')
+  }
+  else if (!params.hasOwnProperty('target_app_port')) {
+    loggerError = logger.ERR_MISSING_MICRO_C2C_PARAMETER(null,null, '"target_app_port"')
+  }
+  else if (params.hasOwnProperty('micro')) {
+    loggerError = logger.ERR_NOT_MICRO_PLAN()
+  }
+  else if (params.hasOwnProperty('edgemicro_key')) {
+    loggerError = logger.ERR_NOT_MICRO_CORES_PLAN(null, null, '"edgemicro_key" parameter is invalid')
+  }
+  else if (params.hasOwnProperty('edgemicro_secret')) {
+    loggerError = logger.ERR_NOT_MICRO_CORES_PLAN(null, null, '"edgemicro_secret" parameter is invalid')
+  }
+
+  return loggerError	
+}
+
+
 // plan schema validation
 function planValidate (req, res, next) {
   var loggerError
@@ -116,6 +140,14 @@ function planValidate (req, res, next) {
     } else {
       next()
     }
+  }	  
+  else if (req.body.plan_id === catalogData.guid.micro_c2c) {
+    // Micro C2C plan
+    // Check C2C plan prameters placeholder
+    loggerError = checkC2CPlan(req.body.parameters)
+    console.log("c2c plan") //TODO: remove me
+    
+    next()
   } 
   else {
     // unknown plan
@@ -253,6 +285,14 @@ function deriveMicroParams(params){
   return microParams
 }
 
+function deriveC2CParams(params) {
+  const c2cParams = {
+    target_app_port: params.target_app_port.toString().trim(),
+    target_app_route: params.target_app_route.toString().trim()    
+  }
+  return c2cParams	
+}
+
 // provising a service instance
 router.put('/:instance_id', configValidate, function (req, res) {
   var org = req.body.parameters.org.toString().trim()
@@ -297,6 +337,7 @@ router.put('/:instance_id/service_bindings/:binding_id',
     bearer: req.body.parameters.bearer,
     micro: req.body.parameters.micro,
     micro_coresident: (req.body.plan_id === catalogData.guid.micro_coresident) ? deriveMicroParams(req.body.parameters) : {},
+    micro_c2c: (req.body.plan_id === catalogData.guid.micro_c2c) ? deriveC2CParams(req.body.parameters) : {},
     host: req.body.parameters.host,
     protocol: deriveProtocol(req.body.parameters).protocol,
     configuration: config.getApigeeConfiguration(req.body.parameters.org, req.body.parameters.env, function(err, data){return data})

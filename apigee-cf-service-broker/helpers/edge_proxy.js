@@ -34,7 +34,7 @@ var openApi = require('./open_api.js')
 function createProxy (bindReq, callback) {
   var proxyHostTemplate = bindReq.host || bindReq.configuration.get('APIGEE_PROXY_HOST_TEMPLATE')
   var mangledName = bindReq.proxyname || template(bindReq.configuration.get('APIGEE_PROXY_NAME_TEMPLATE'), {
-    route: bindReq.bind_resource.route || bindReq.micro_coresident.target_app_route
+    route: bindReq.bind_resource.route || bindReq.micro_coresident.target_app_route || bindReq.micro_c2c.target_app_route  
   })
   // Regex of allowed characters (obviously case insensitive) according to API docs
   mangledName = mangledName.replace(/[^A-Z0-9._\-$ %]+/ig, '_')  // route can be host.domain/path
@@ -54,7 +54,20 @@ function createProxy (bindReq, callback) {
           apigee_proxy: mangledName
         }
       }, bindReq)
-  }
+  } else if (Object.getOwnPropertyNames(bindReq.micro_c2c).length > 0) {
+      var backendAppName = bindReq.micro_c2c.target_app_route.split(".")[0]
+      mangledName = 'edgemicro_' + bindReq.micro_c2c.target_app_route
+      union = Object.assign({
+        domain: bindReq.configuration.get('APIGEE_PROXY_DOMAIN'),
+        proxyname: mangledName,
+        basepath: '/' + backendAppName, 
+        credentials: { 
+          apigee_org: bindReq.org,
+          apigee_env: bindReq.env,
+          apigee_proxy: mangledName
+        }
+      }, bindReq)
+  }	
   else{
     if (bindReq.micro){
       proxyHostTemplate = bindReq.micro
@@ -144,8 +157,9 @@ function getZip (proxyData, callback) {
           var dummyTargetUrl
           if(Object.getOwnPropertyNames(proxyData.micro_coresident).length > 0){
             dummyTargetUrl = "http://localhost:" + proxyData.micro_coresident.target_app_port
-          }
-          else{
+          } else if (Object.getOwnPropertyNames(proxyData.micro_c2c).length > 0) {
+            dummyTargetUrl = proxyData.protocol + "://" + proxyData.micro_c2c.target_app_route + ":" + proxyData.micro_c2c.target_app_port 
+	  } else {
             dummyTargetUrl = proxyData.protocol + "://" + proxyData.bind_resource.route  // Actual is X-Cf-Forwarded-Url header
           }
           var vHostString = JSON.parse(data).map(function (val) { return '<VirtualHost>' + val + '</VirtualHost>' }).join('\n')
